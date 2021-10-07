@@ -1,0 +1,9 @@
+# Dependency directories
+node_modules
+
+# Files related to reports
+allure-report
+allure-results
+
+# Logs
+logs

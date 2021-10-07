@@ -1,0 +1,632 @@
+{
+	"info": {
+		"_postman_id": "26980932-18bd-40fa-8cba-9968f290b817",
+		"name": "Test Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Positive user creation (201)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let name = pm.variables.replaceIn('{{$randomFullName}}'),",
+							"    email = pm.variables.replaceIn('{{$randomEmail}}'),",
+							"    genders = [\"male\", \"female\"],",
+							"    statuses = [\"inactive\", \"active\"];",
+							"",
+							"",
+							"pm.globals.set(\"name\", name);",
+							"pm.globals.set(\"email\", email);",
+							"pm.globals.set(\"gender\", genders[ _.random (0,1)]);",
+							"pm.globals.set(\"status\", statuses[ _.random (0,1)])",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseSchema = {",
+							"    \"meta\": null,",
+							"    \"data\": {",
+							"        \"id\": \"number\",",
+							"        \"name\": \"string\",",
+							"        \"email\": \"string\",",
+							"        \"gender\": \"string\",",
+							"        \"status\": \"string\"",
+							"    }",
+							"};",
+							"",
+							"pm.test(\"Request is successful with a status code of 201\", function () {",
+							"  pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response schema is valid\", function () {",
+							"  pm.response.to.have.jsonSchema(responseSchema);",
+							"});",
+							"",
+							"pm.test(\"Check that it returns correct data\", function () {",
+							"  var responseData = pm.response.json().data;",
+							"  pm.expect(responseData.id).to.be.an(\"number\");",
+							"  pm.expect(responseData.name).to.eql(pm.variables.get(\"name\"));",
+							"  pm.expect(responseData.email).to.eql(pm.variables.get(\"email\"));",
+							"  pm.expect(responseData.gender).to.eql(pm.variables.get(\"gender\"));",
+							"  pm.expect(responseData.status).to.eql(pm.variables.get(\"status\"));",
+							"});",
+							"",
+							"pm.test(\"Check that response time is less then 1500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "0f10f79b0d7b0e244b57f03242e26a1e40a45b2597b20c7266ddbb311cd8f60a",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{email}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "{{gender}}",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "{{status}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://gorest.co.in/public/v1/users",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Negative user creation (422)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let name = pm.variables.replaceIn('{{$randomFullName}}'),",
+							"    email = pm.variables.replaceIn('{{$randomEmail}}'),",
+							"    genders = [\"male\", \"female\"];",
+							"    ",
+							"pm.globals.set(\"name\", name);",
+							"pm.globals.set(\"email\", email);",
+							"pm.globals.set(\"gender\", genders[ _.random (0,1)]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseSchema = {",
+							"    \"meta\": null,",
+							"    \"data\": {",
+							"        \"field\": \"string\",",
+							"        \"message\": \"string\"",
+							"    }",
+							"};",
+							"",
+							"pm.test(\"Request is failed with a status code of 422\", function () {",
+							"  pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Response schema is valid\", function () {",
+							"  pm.response.to.have.jsonSchema(responseSchema);",
+							"});",
+							"",
+							"pm.test(\"Check that it returns correct error\", function () {",
+							"  var responseData = pm.response.json().data;",
+							"  pm.expect(responseData[0].field).to.eql(\"status\");",
+							"  pm.expect(responseData[0].message).to.eql(\"can't be blank\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "0f10f79b0d7b0e244b57f03242e26a1e40a45b2597b20c7266ddbb311cd8f60a",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{email}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "{{gender}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://gorest.co.in/public/v1/users",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User creation with invalid user email (422)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let name = pm.variables.replaceIn('{{$randomFullName}}'),",
+							"    email = pm.variables.replaceIn('{{$randomEmail}}').replace('@', '.'),",
+							"    genders = [\"male\", \"female\"],",
+							"    statuses = [\"inactive\", \"active\"];",
+							"    ",
+							"pm.globals.set(\"name\", name);",
+							"pm.globals.set(\"email\", email);",
+							"pm.globals.set(\"gender\", genders[ _.random (0,1)]);",
+							"pm.globals.set(\"status\", statuses[ _.random (0,1)])"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Request is failed with a status code of 422\", function () {",
+							"  pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Check that it returns correct error\", function () {",
+							"  var responseData = pm.response.json().data;",
+							"  pm.expect(responseData[0].field).to.eql(\"email\");",
+							"  pm.expect(responseData[0].message).to.eql(\"is invalid\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "0f10f79b0d7b0e244b57f03242e26a1e40a45b2597b20c7266ddbb311cd8f60a",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{email}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "{{gender}}",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "{{status}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://gorest.co.in/public/v1/users",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User creation with invalid gender (422)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let name = pm.variables.replaceIn('{{$randomFullName}}'),",
+							"    email = pm.variables.replaceIn('{{$randomEmail}}'),",
+							"    genders = [\"m\", \"f\"],",
+							"    statuses = [\"inactive\", \"active\"];",
+							"    ",
+							"pm.globals.set(\"name\", name);",
+							"pm.globals.set(\"email\", email);",
+							"pm.globals.set(\"gender\", genders[ _.random (0,1)]);",
+							"pm.globals.set(\"status\", statuses[ _.random (0,1)])"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Request is failed with a status code of 422\", function () {",
+							"  pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Check that it returns correct error\", function () {",
+							"  var responseData = pm.response.json().data;",
+							"  pm.expect(responseData[0].field).to.eql(\"gender\");",
+							"  pm.expect(responseData[0].message).to.eql(\"can't be blank\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "0f10f79b0d7b0e244b57f03242e26a1e40a45b2597b20c7266ddbb311cd8f60a",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{email}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "{{gender}}",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "{{status}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://gorest.co.in/public/v1/users",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User creation with invalid status (422)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let name = pm.variables.replaceIn('{{$randomFullName}}'),",
+							"    email = pm.variables.replaceIn('{{$randomEmail}}'),",
+							"    genders = [\"male\", \"female\"],",
+							"    statuses = [\"pending\", \"cancelled\", \"rejected\"];",
+							"    ",
+							"pm.globals.set(\"name\", name);",
+							"pm.globals.set(\"email\", email);",
+							"pm.globals.set(\"gender\", genders[ _.random (0,1)]);",
+							"pm.globals.set(\"status\", statuses[ _.random (0,2)])"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Request is failed with a status code of 422\", function () {",
+							"  pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Check that it returns correct error\", function () {",
+							"  var responseData = pm.response.json().data;",
+							"  pm.expect(responseData[0].field).to.eql(\"status\");",
+							"  pm.expect(responseData[0].message).to.eql(\"can't be blank\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "0f10f79b0d7b0e244b57f03242e26a1e40a45b2597b20c7266ddbb311cd8f60a",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{email}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "{{gender}}",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "{{status}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://gorest.co.in/public/v1/users",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Negative user creation (401)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Request is failed with a status code of 401\", function () {",
+							"  pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Check that it returns correct error\", function () {",
+							"  var responseData = pm.response.json().data;",
+							"  pm.expect(responseData.message).to.eql(\"Authentication failed\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://gorest.co.in/public/v1/users",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Negative user creation with invalid endpoint (404)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let name = pm.variables.replaceIn('{{$randomFullName}}'),",
+							"    email = pm.variables.replaceIn('{{$randomEmail}}'),",
+							"    genders = [\"male\", \"female\"],",
+							"    statuses = [\"inactive\", \"active\"];",
+							"",
+							"",
+							"pm.globals.set(\"name\", name);",
+							"pm.globals.set(\"email\", email);",
+							"pm.globals.set(\"gender\", genders[ _.random (0,1)]);",
+							"pm.globals.set(\"status\", statuses[ _.random (0,1)])",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Request is failed with a status code of 404\", function () {",
+							"  pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "0f10f79b0d7b0e244b57f03242e26a1e40a45b2597b20c7266ddbb311cd8f60a",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{email}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "{{gender}}",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "{{status}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://gorest.co.in/public/v1/user",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
