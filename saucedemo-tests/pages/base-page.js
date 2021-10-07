@@ -1,39 +1,37 @@
 module.exports = class BasePage {
-
   //---------------------------------------
   // Elements
   //---------------------------------------
 
   get shoppingCartBtn() {
-    return $('.shopping_cart_link')
+    return $('.shopping_cart_link');
   }
 
-  get shoppingCartBadge(){
+  get shoppingCartBadge() {
     return $('.shopping_cart_badge');
   }
 
-  get continueBtn(){
+  get continueBtn() {
     return $('#continue');
   }
-
 
   //---------------------------------------
   // Functions
   //---------------------------------------
 
   open(path) {
-    return browser.url(path)
+    return browser.url(path);
   }
 
   //---------------------------------------
   // Actions (click)
   //---------------------------------------
 
-  async openShoppingCart(){
+  async openShoppingCart() {
     await (await this.shoppingCartBtn).click();
   }
 
-  async clickContinueBtn(){
+  async clickContinueBtn() {
     await (await this.continueBtn).click();
   }
 
@@ -41,7 +39,7 @@ module.exports = class BasePage {
   // Checks
   //---------------------------------------
 
-  async checkShoppingCartBadge(count){
+  async checkShoppingCartBadge(count) {
     expect(await this.shoppingCartBadge.getText()).toEqual(count);
   }
-}
+};

@@ -1,42 +1,41 @@
 const BasePage = require('./base-page');
 
 class CartPage extends BasePage {
+  //---------------------------------------
+  // Elements
+  //---------------------------------------
 
-    //---------------------------------------
-    // Elements
-    //---------------------------------------
+  itemPriceEle(itemName) {
+    return $(`//*[@class="cart_item"]//*[text()="${itemName}"]/../../..//*[@class="inventory_item_price"]`);
+  }
 
-    itemPriceEle(itemName) {
-        return $(`//*[@class="cart_item"]//*[text()="${itemName}"]/../../..//*[@class="inventory_item_price"]`)
-    }
+  get checkoutBtn() {
+    return $('#checkout');
+  }
 
-    get checkoutBtn() {
-        return $('#checkout')
-    }
+  //---------------------------------------
+  // Functions
+  //---------------------------------------
 
-    //---------------------------------------
-    // Functions
-    //---------------------------------------
+  async getItemPrice(itemName) {
+    return this.itemPriceEle(itemName).getText();
+  }
 
-    async getItemPrice(itemName) {
-        return this.itemPriceEle(itemName).getText();
-    }
+  //---------------------------------------
+  // Actions (click)
+  //---------------------------------------
 
-    //---------------------------------------
-    // Actions (click)
-    //---------------------------------------
+  async clickCheckoutBtn() {
+    await (await this.checkoutBtn).click();
+  }
 
-    async clickCheckoutBtn() {
-        await (await this.checkoutBtn).click();
-    }
+  //---------------------------------------
+  // Checks
+  //---------------------------------------
 
-    //---------------------------------------
-    // Checks
-    //---------------------------------------
-
-    async checkShoppingCartBadge(count) {
-        expect(count).toEqual(await this.shoppingCartBadge.getText());
-    }
+  async checkShoppingCartBadge(count) {
+    expect(count).toEqual(await this.shoppingCartBadge.getText());
+  }
 }
 
 module.exports = new CartPage();

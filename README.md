@@ -26,6 +26,15 @@ You can generate report and it will be opened by executing
 npm run generate:report
 ```
 
+## Linter
+To run eslint checks you can use 
+```
+npm run eslint:check
+```
+To run eslint checks with automatic fixes you can use
+```
+npm run eslint:fix
+```
 
 ## Tech
 * [Node.js](https://nodejs.org/en/)

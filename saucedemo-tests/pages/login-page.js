@@ -1,51 +1,51 @@
 const BasePage = require('./base-page');
 
 class LoginPage extends BasePage {
-    get txtUserName() {
-        return $('#user-name')
-    }
+  get txtUserName() {
+    return $('#user-name');
+  }
 
-    get txtPassword() {
-        return $('#password')
-    }
+  get txtPassword() {
+    return $('#password');
+  }
 
-    get loginBtn() {
-        return $('#login-button')
-    }
+  get loginBtn() {
+    return $('#login-button');
+  }
 
-    //---------------------------------------
-    // Functions
-    //---------------------------------------
+  //---------------------------------------
+  // Functions
+  //---------------------------------------
 
-    open() {
-        return super.open('/');
-    }
+  open() {
+    return super.open('/');
+  }
 
-    async login(userName, password) {
-        await this.fillUserNameField(userName);
-        await this.fillPasswordField(password);
-        await this.clickLoginBtn();
-    }
+  async login(userName, password) {
+    await this.fillUserNameField(userName);
+    await this.fillPasswordField(password);
+    await this.clickLoginBtn();
+  }
 
-    //---------------------------------------
-    // Actions (fill)
-    //---------------------------------------
+  //---------------------------------------
+  // Actions (fill)
+  //---------------------------------------
 
-    async fillUserNameField(email) {
-        await (await this.txtUserName).setValue(email);
-    }
+  async fillUserNameField(email) {
+    await (await this.txtUserName).setValue(email);
+  }
 
-    async fillPasswordField(password) {
-       await (await this.txtPassword).setValue(password);
-    }
+  async fillPasswordField(password) {
+    await (await this.txtPassword).setValue(password);
+  }
 
-    //---------------------------------------
-    // Actions (click)
-    //---------------------------------------
+  //---------------------------------------
+  // Actions (click)
+  //---------------------------------------
 
-    async clickLoginBtn() {
-        await (await this.loginBtn).click();
-    }
+  async clickLoginBtn() {
+    await (await this.loginBtn).click();
+  }
 }
 
 module.exports = new LoginPage();
