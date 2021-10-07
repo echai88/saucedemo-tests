@@ -33,7 +33,7 @@ npm run generate:report
 * [Faker](https://faker.readthedocs.io/en/master/) - used for data generating
 * [Allure Test Report](http://allure.qatools.ru/) - reporter
 
-##T o run API tests you need:
+## To run API tests you need:
 
 1. Download Postman application
 2. Import  postman-collections/Test Task.postman_collection.json file into postman (you can use guide from this [link](https://kb.datamotion.com/?ht_kb=postman-instructions-for-exporting-and-importing))
